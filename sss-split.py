@@ -4,7 +4,6 @@ from parser import parse_args
 
 
 def main():
-
     threshold, shares_num = parse_args()
     secret = input(f'Enter the secret, at most '
                    f'{MAX_SECRET_LENGTH} ASCII characters: ')
