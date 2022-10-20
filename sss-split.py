@@ -1,22 +1,16 @@
-from secrets import randbelow
-import numpy as np
-
-import utils
-from consts import MODULO
+from sss_lib.consts import MAX_SECRET_LENGTH
+from sss_lib.sharing import secret_to_shares
+from parser import parse_args
 
 
 def main():
-    k, n = utils.parse_args()
-    secret = input('Enter the secret, at most 256 ASCII characters: ')
-    secret_bytes = bytes(secret, 'ascii')
-    S = int.from_bytes(secret_bytes, byteorder='big')
 
-    utils.check_system_appropriateness(S, k, n)
-    polynomial = utils.generate_polynomial(k, S)
+    threshold, shares_num = parse_args()
+    secret = input(f'Enter the secret, at most '
+                   f'{MAX_SECRET_LENGTH} ASCII characters: ')
 
-    for x_i in range(1, n+1):
-        y_i = hex(int(np.polyval(polynomial, x_i)) % MODULO)
-        print(f'{x_i}-{y_i[2:]}')
+    shares = secret_to_shares(secret, threshold, shares_num)
+    [print('\n' + share) for share in shares]
 
 
 if __name__ == "__main__":
