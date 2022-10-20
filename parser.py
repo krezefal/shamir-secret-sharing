@@ -1,8 +1,5 @@
 import argparse
-from secrets import randbelow
-import numpy as np
-
-from consts import MODULO
+from typing import Union
 
 
 class CapitalisedHelpFormatter(argparse.HelpFormatter):
@@ -13,7 +10,7 @@ class CapitalisedHelpFormatter(argparse.HelpFormatter):
             usage, actions, groups, prefix)
 
 
-def parse_args() -> tuple[int, int]:
+def parse_args() -> Union[tuple[int, int], int]:
     parser = argparse.ArgumentParser(add_help=False, formatter_class=CapitalisedHelpFormatter)
     parser._optionals.title = 'Options'
 
@@ -32,18 +29,8 @@ def parse_args() -> tuple[int, int]:
                         action='help')
 
     args = parser.parse_args()
-    return args.threshold, args.number
 
-
-def check_system_appropriateness(S, k, n: int):
-    # assert MODULE is PRIME number to provide system reliability.
-    assert MODULO > S, "Must be > S not to lose the secret. " \
-                       "Otherwise, only the remainder of the number will be preserved."
-    assert MODULO > n, "Must be > n to avoid shares repetitions."
-    assert n >= k, "Must be >= k to be able to reassemble the secret."
-
-
-def generate_polynomial(k, S: int) -> np.poly1d:
-    random_coefficients = [(randbelow(MODULO - 1) + 1) for _ in range(k - 1)]
-    polynomial = np.poly1d([*random_coefficients, S])
-    return polynomial
+    if parser.prog == 'sss-split.py':
+        return args.threshold, args.number
+    else:
+        return args.threshold
