@@ -4,12 +4,10 @@ from .utils import setup_mersenne_prime, check_system_appropriateness, \
 
 
 def secret_to_shares(secret: str, k, n: int) -> list[str]:
-
     mersenne_prime = setup_mersenne_prime(len(secret))
     module = 2 ** mersenne_prime - 1
 
     S = secret_to_int(secret)
-    print(S)
     check_system_appropriateness(S, k, n, module)
     polynomial = generate_polynomial(k - 1, S, module)
 
@@ -23,7 +21,6 @@ def secret_to_shares(secret: str, k, n: int) -> list[str]:
 
 
 def shares_to_secret(shares: list[str]) -> str:
-
     points, mersenne_prime = shares_to_points(shares)
     module = 2 ** mersenne_prime - 1
     S = lagrange_calc_value(0, points, module)
